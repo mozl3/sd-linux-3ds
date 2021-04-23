@@ -1,0 +1,20 @@
+#!/bin/sh
+clear
+
+echo Mounting /proc...
+mount -t proc none /proc
+
+echo Mounting mmcblk0p2...
+mknod /dev/mmcblk0p2 b 254 2
+mount /dev/mmcblk0p2 /mnt
+
+echo /proc is not needed anymore...
+umount /proc
+
+echo Mounting chroot...
+mount -t sysfs none /mnt/root/sys
+mount -t proc none /mnt/root/proc
+mount -o bind /dev /mnt/root/dev
+
+echo Run chroot...
+exec chroot /mnt/root /bin/bash
